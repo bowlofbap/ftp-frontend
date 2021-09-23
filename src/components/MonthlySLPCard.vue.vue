@@ -1,5 +1,5 @@
 <template>
-<generic-card :showGraph="true"
+<generic-card :showGraph="showableGraph"
               :data="getGraphData"
               :header="header"
               :bottomText="recentIncreaseText"
@@ -13,7 +13,7 @@ import { mapGetters } from "vuex"
 import GenericCard from './GenericCard.vue'
 
 export default {
-    name: "daily-slp-card",
+    name: "monthly-slp-card",
     props:{
         header: String,
         icon: String,
@@ -32,21 +32,33 @@ export default {
             let chartData = []
             let tempData = {}
             this.data.forEach(function(scholar){
+                let day = 0
+                let weeklySlpTotal = 0
+                //iterate until > 0 because we don't want from day 0, we want the delta from 0->1
                 for (let i = scholar.length-1; i > 0; i--){
                     let diff = 0
                     const prevBal = scholar[i-1].slp_bal
                     const currBal = scholar[i].slp_bal
                     diff = currBal - prevBal
-                    const date = Date.parse(scholar[i].created_at)
-                    const timestamp = date//yr + "-" + mo + "-" + day
-                    const diffAdd = tempData[timestamp] ? tempData[timestamp] + diff : diff
-                    tempData[timestamp] = diffAdd
+                    if (day < 30){
+                        day++
+                        weeklySlpTotal += diff
+                    }else{
+                        const date = Date.parse(scholar[i].created_at)
+                        const diffAdd = tempData[date] ? tempData[date] + weeklySlpTotal : weeklySlpTotal
+                        tempData[date] = diffAdd
+                        day = 0
+                        weeklySlpTotal = 0
+                    }
                 }
             })
             Object.entries(tempData).sort().forEach(([key, value])=>{
                 chartData.push([new Date(+key), value])
             })
             return chartData
+        },
+        showableGraph(){
+            return this.getGraphData.length > 1
         },
         getRecentIncrease(){
             const graphData = this.getGraphData 
@@ -64,11 +76,15 @@ export default {
                 let returnString = graphData[graphData.length-1][1] 
                 return returnString >= 0 ? '+' + returnString : returnString;
             }
-            return 0
+            return '0'
         },
         recentIncreaseText(){
-            let returnString = this.getRecentIncrease + ' compared to yesterday'
-            return this.getRecentIncrease >= 0 ? '+' + returnString : returnString;
+            if (this.showableGraph){
+                let returnString = this.getRecentIncrease + ' compared to previous 30 days'
+                return this.getRecentIncrease >= 0 ? '+' + returnString : returnString;
+            }else{
+                return "Not enough data to compare to previous months"
+            }
         },
     },
     methods:{

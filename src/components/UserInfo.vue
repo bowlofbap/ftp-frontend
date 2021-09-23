@@ -1,22 +1,34 @@
 <template>
       <b-card-group deck class="m-5">
-        <generic-card :cardDetails="scholarOverview" :data="scholarSnapshotsDaily"/>
-        <daily-slp-card :cardDetails="slpGainDaily" :data="scholarSnapshotsDaily"/>
-        <generic-card :cardDetails="slpGainWeekly" :data="scholarSnapshotsWeekly"/>
-        <generic-card :cardDetails="slpGainMonthly" :data="scholarSnapshotsMonthly"/>
+        <scholar-count-card   :header="scholarOverview.header"
+                        :icon="scholarOverview.icon"
+                        :display="scholarOverview.display"/>
+        <daily-slp-card :header="dailySlpOverview.header"
+                        :icon="dailySlpOverview.icon"
+                        :data="scholarSnapshotsDaily"/>
+        <weekly-slp-card :header="weeklySlpOverview.header"
+                        :icon="weeklySlpOverview.icon"
+                        :data="scholarSnapshotsWeekly"/>
+        <monthly-slp-card :header="monthlySlpOverview.header"
+                        :icon="monthlySlpOverview.icon"
+                        :data="scholarSnapshotsMonthly"/>
       </b-card-group>
 </template>
 
 <script>
 import { mapGetters } from 'vuex'
-import GenericCard from '@/components/GenericCard.vue'
+import ScholarCountCard from '@/components/ScholarCountCard.vue'
 import DailySlpCard from '@/components/DailySLPCard.vue'
+import WeeklySlpCard from '@/components/WeeklySLPCard.vue'
+import MonthlySlpCard from '@/components/MonthlySLPCard.vue'
 
 export default {
     name: "user-info",
     components: {
-        GenericCard,
-        DailySlpCard
+        ScholarCountCard,
+        DailySlpCard,
+        WeeklySlpCard,
+        MonthlySlpCard
     },
 
     props:{
@@ -27,50 +39,34 @@ export default {
     },
     data(){
         return{
+            scholarOverview: {
+                header: "Scholars",
+                icon: "person",
+                display: ''+this.numberScholars
+            },
+            dailySlpOverview: {
+                header: "Daily SLP Gain",
+                icon: "gem",
+            },
+            weeklySlpOverview: {
+                header: "Weekly SLP Gain",
+                icon: "gem",
+            },
+            monthlySlpOverview: {
+                header: "Monthly SLP Gain",
+                icon: "gem",
+            },
         }
     },
     computed:{
         ...mapGetters(['getCurrentUser']),
-        scholarOverview(){
-            const cardInfo = {
-                cardName: "Scholars",
-                icon: "person",
-                totalNum: this.numberScholars, 
-                recentIncrease: null,
-                timeFrame: "daily",
-            }
-            return cardInfo
-        },
-        slpGainDaily(){
+        slpOverview(){
             const cardInfo = {
                 cardName: "Total Daily SLP",
                 icon: "gem",
-                totalNum: this.getSlpGain(this.scholarSnapshotsDaily), 
-                recentIncrease: null,
-                timeFrame: null,
             }
             return cardInfo
         },
-        slpGainWeekly(){
-            const cardInfo = {
-                cardName: "Total Weekly SLP",
-                icon: "gem",
-                totalNum: this.getSlpGain(this.scholarSnapshotsWeekly), 
-                recentIncrease: null,
-                timeFrame: "weekly",
-            }
-            return cardInfo
-        },
-        slpGainMonthly(){
-            const cardInfo = {
-                cardName: "Total Monthly SLP",
-                icon: "gem",
-                totalNum: this.getSlpGain(this.scholarSnapshotsMonthly), 
-                recentIncrease: null,
-                timeFrame: "monthly",
-            }
-            return cardInfo
-        }
     },
     methods:{
         getSlpGain(scholarSnapshotsArray){

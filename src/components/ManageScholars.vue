@@ -17,18 +17,21 @@
             <b-col cols="2">
                 Personal Ronin
             </b-col>
-            <b-col cols="2">
+            <b-col cols="1">
                 Previous Pay Date
             </b-col>
             <b-col cols="2">
-                Weekly SLP
+                Average Daily SLP 
+            </b-col>
+            <b-col cols="2">
+                Last Week's SLP
             </b-col>
         </b-row>
     </b-card>
     <b-card class="ml-4 mr-4 mb-4">
         <scholar-block v-for="scholarSnapshots in scholarSnapshotsWeekly"
                         :key="scholarSnapshots[0].id"
-                        :scholarSnapshotsWeekly="scholarSnapshots"
+                        :scholarSnapshotData="scholarSnapshots"
         />
     </b-card>
 </div>
