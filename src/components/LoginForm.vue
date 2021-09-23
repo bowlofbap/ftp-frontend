@@ -7,7 +7,7 @@
     <b-form @submit.prevent="userLogin">
         <b-form-input
           class="mt-4"
-          v-model="user.username"
+          v-model="user.email"
           required
           placeholder="Username"
         ></b-form-input>
@@ -37,7 +37,7 @@ export default {
   data() {
     return {
       user: {
-        username: '',
+        email: '',
         password: '',
       },
       invalidCredentials: false,
@@ -46,7 +46,7 @@ export default {
   methods: {
     ...mapActions(["loginUser"]),
     userLogin(){
-        fetch(`${process.env.VUE_APP_REMOTE_API}/login`, {
+        fetch(`${process.env.VUE_APP_REMOTE_API}/users/sign_in`, {
           method: 'POST',
           headers: {
             Accept: 'application/json',
