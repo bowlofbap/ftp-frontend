@@ -72,9 +72,12 @@ export default {
       this.scholarSnapshotsDaily = 
         [
           [
-            {"scholar_id":1,"name":"Joyme","address":"ronin:fa5b9aaacdc14c360a88cd210f4df0e098182135","personal_address":"ronin:b87d5c70997a2efa957467d216fc67c53d98282e", "slp_bal":1235,"created_at":"2021-09-17T02:13:26.450Z","manager_id":1},
+            {"scholar_id":1,"name":"Joyme","address":"ronin:fa5b9aaacdc14c360a88cd210f4df0e098182135","personal_address":"ronin:b87d5c70997a2efa957467d216fc67c53d98282e", "slp_bal":1315,"created_at":"2021-09-17T02:13:26.450Z","manager_id":1},
             {"scholar_id":1,"name":"Joyme","address":"ronin:fa5b9aaacdc14c360a88cd210f4df0e098182135","personal_address":"ronin:b87d5c70997a2efa957467d216fc67c53d98282e", "slp_bal":1035,"created_at":"2021-09-16T02:11:26.450Z","manager_id":1},
             {"scholar_id":1,"name":"Joyme","address":"ronin:fa5b9aaacdc14c360a88cd210f4df0e098182135","personal_address":"ronin:b87d5c70997a2efa957467d216fc67c53d98282e", "slp_bal":935,"created_at":"2021-09-15T02:14:54.671Z","manager_id":1},
+            {"scholar_id":1,"name":"Joyme","address":"ronin:fa5b9aaacdc14c360a88cd210f4df0e098182135","personal_address":"ronin:b87d5c70997a2efa957467d216fc67c53d98282e", "slp_bal":800,"created_at":"2021-09-14T02:13:26.450Z","manager_id":1},
+            {"scholar_id":1,"name":"Joyme","address":"ronin:fa5b9aaacdc14c360a88cd210f4df0e098182135","personal_address":"ronin:b87d5c70997a2efa957467d216fc67c53d98282e", "slp_bal":700,"created_at":"2021-09-13T02:11:26.450Z","manager_id":1},
+            {"scholar_id":1,"name":"Joyme","address":"ronin:fa5b9aaacdc14c360a88cd210f4df0e098182135","personal_address":"ronin:b87d5c70997a2efa957467d216fc67c53d98282e", "slp_bal":600,"created_at":"2021-09-12T02:14:54.671Z","manager_id":1},
           ],
           [
             {"scholar_id":2,"name":"Test1","address":"ronin:f4888bdaa3003ec4e8cb0682bd3cb99568633c64","personal_address":"ronin:9ecb9c08d75e86818bf0606a64dbdb8d36562dfa","slp_bal":300,"created_at":"2021-09-16T02:11:26.450Z","manager_id":1},

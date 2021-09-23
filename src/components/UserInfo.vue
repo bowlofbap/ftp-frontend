@@ -1,7 +1,7 @@
 <template>
       <b-card-group deck class="m-5">
         <generic-card :cardDetails="scholarOverview" :data="scholarSnapshotsDaily"/>
-        <generic-card :cardDetails="slpGainDaily" :data="scholarSnapshotsDaily"/>
+        <daily-slp-card :cardDetails="slpGainDaily" :data="scholarSnapshotsDaily"/>
         <generic-card :cardDetails="slpGainWeekly" :data="scholarSnapshotsWeekly"/>
         <generic-card :cardDetails="slpGainMonthly" :data="scholarSnapshotsMonthly"/>
       </b-card-group>
@@ -10,11 +10,13 @@
 <script>
 import { mapGetters } from 'vuex'
 import GenericCard from '@/components/GenericCard.vue'
+import DailySlpCard from '@/components/DailySLPCard.vue'
 
 export default {
     name: "user-info",
     components: {
         GenericCard,
+        DailySlpCard
     },
 
     props:{

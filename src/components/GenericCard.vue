@@ -31,7 +31,6 @@
 
 <script>
 import { mapGetters } from "vuex"
-import SlpGraph from '@/components/SlpGraph.vue'
 
 export default {
     name: "generic-card",
@@ -48,7 +47,6 @@ export default {
         data: Array
     },
     components:{
-        SlpGraph
     },
     data(){
       return{
