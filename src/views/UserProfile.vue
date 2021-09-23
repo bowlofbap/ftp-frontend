@@ -30,6 +30,7 @@
 import UserInfo from "@/components/UserInfo.vue"
 import ManageScholars from '@/components/ManageScholars.vue'
 import { mapGetters } from 'vuex'
+import temp_json_data from '../../temp/data.json'
 
 export default {
   name: 'user-profile',
@@ -58,7 +59,7 @@ export default {
   },
   methods:{
     fetchScholarsApi(){
-      const username = this.$route.params.username;
+      const userid = this.$route.params.username;
       fetch(`${process.env.VUE_APP_REMOTE_API}` + "/api/scholars/"+username)
       .then(response=>{
         return response.json();
@@ -69,47 +70,10 @@ export default {
       .catch(err=>console.log(err));
     },
     fetchScholars(){
-      this.scholarSnapshotsDaily = 
-        [
-          [
-            {"scholar_id":1,"name":"Joyme","address":"ronin:fa5b9aaacdc14c360a88cd210f4df0e098182135","personal_address":"ronin:b87d5c70997a2efa957467d216fc67c53d98282e", "slp_bal":1235,"created_at":"2021-09-17T02:13:26.450Z","manager_id":1},
-            {"scholar_id":1,"name":"Joyme","address":"ronin:fa5b9aaacdc14c360a88cd210f4df0e098182135","personal_address":"ronin:b87d5c70997a2efa957467d216fc67c53d98282e", "slp_bal":1035,"created_at":"2021-09-16T02:11:26.450Z","manager_id":1},
-            {"scholar_id":1,"name":"Joyme","address":"ronin:fa5b9aaacdc14c360a88cd210f4df0e098182135","personal_address":"ronin:b87d5c70997a2efa957467d216fc67c53d98282e", "slp_bal":935,"created_at":"2021-09-15T02:14:54.671Z","manager_id":1},
-          ],
-          [
-            {"scholar_id":2,"name":"Test1","address":"ronin:f4888bdaa3003ec4e8cb0682bd3cb99568633c64","personal_address":"ronin:9ecb9c08d75e86818bf0606a64dbdb8d36562dfa","slp_bal":300,"created_at":"2021-09-16T02:11:26.450Z","manager_id":1},
-            {"scholar_id":2,"name":"Test1","address":"ronin:f4888bdaa3003ec4e8cb0682bd3cb99568633c64","personal_address":"ronin:9ecb9c08d75e86818bf0606a64dbdb8d36562dfa","slp_bal":100,"created_at":"2021-09-15T02:14:54.671Z","manager_id":1}
-          ],
-        ]
-      this.scholarSnapshotsWeekly = 
-        [
-          [
-            {"scholar_id":1,"name":"Joyme","address":"ronin:fa5b9aaacdc14c360a88cd210f4df0e098182135","personal_address":"ronin:b87d5c70997a2efa957467d216fc67c53d98282e", "slp_bal":1035,"created_at":"2021-09-16T02:11:26.450Z","manager_id":1},
-            {"scholar_id":1,"name":"Joyme","address":"ronin:fa5b9aaacdc14c360a88cd210f4df0e098182135","personal_address":"ronin:b87d5c70997a2efa957467d216fc67c53d98282e", "slp_bal":935,"created_at":"2021-09-15T02:14:54.671Z","manager_id":1},
-            {"scholar_id":1,"name":"Joyme","address":"ronin:fa5b9aaacdc14c360a88cd210f4df0e098182135","personal_address":"ronin:b87d5c70997a2efa957467d216fc67c53d98282e", "slp_bal":600,"created_at":"2021-09-13T02:14:54.671Z","manager_id":1},
-            {"scholar_id":1,"name":"Joyme","address":"ronin:fa5b9aaacdc14c360a88cd210f4df0e098182135","personal_address":"ronin:b87d5c70997a2efa957467d216fc67c53d98282e", "slp_bal":300,"created_at":"2021-09-11T02:14:54.671Z","manager_id":1},
-          ],
-          [
-            {"scholar_id":2,"name":"Test1","address":"ronin:f4888bdaa3003ec4e8cb0682bd3cb99568633c64","personal_address":"ronin:9ecb9c08d75e86818bf0606a64dbdb8d36562dfa","slp_bal":300,"created_at":"2021-09-16T02:11:26.450Z","manager_id":1},
-            {"scholar_id":2,"name":"Test1","address":"ronin:f4888bdaa3003ec4e8cb0682bd3cb99568633c64","personal_address":"ronin:9ecb9c08d75e86818bf0606a64dbdb8d36562dfa","slp_bal":100,"created_at":"2021-09-15T02:14:54.671Z","manager_id":1}
-          ],
-        ]
-      this.scholarSnapshotsMonthly = 
-        [
-          [
-            {"scholar_id":1,"name":"Joyme","address":"ronin:fa5b9aaacdc14c360a88cd210f4df0e098182135","personal_address":"ronin:b87d5c70997a2efa957467d216fc67c53d98282e", "slp_bal":1035,"created_at":"2021-09-16T02:11:26.450Z","manager_id":1},
-            {"scholar_id":1,"name":"Joyme","address":"ronin:fa5b9aaacdc14c360a88cd210f4df0e098182135","personal_address":"ronin:b87d5c70997a2efa957467d216fc67c53d98282e", "slp_bal":935,"created_at":"2021-09-15T02:14:54.671Z","manager_id":1},
-            {"scholar_id":1,"name":"Joyme","address":"ronin:fa5b9aaacdc14c360a88cd210f4df0e098182135","personal_address":"ronin:b87d5c70997a2efa957467d216fc67c53d98282e", "slp_bal":600,"created_at":"2021-09-13T02:14:54.671Z","manager_id":1},
-            {"scholar_id":1,"name":"Joyme","address":"ronin:fa5b9aaacdc14c360a88cd210f4df0e098182135","personal_address":"ronin:b87d5c70997a2efa957467d216fc67c53d98282e", "slp_bal":300,"created_at":"2021-09-11T02:14:54.671Z","manager_id":1},
-            {"scholar_id":1,"name":"Joyme","address":"ronin:fa5b9aaacdc14c360a88cd210f4df0e098182135","personal_address":"ronin:b87d5c70997a2efa957467d216fc67c53d98282e", "slp_bal":135,"created_at":"2021-09-05T02:14:54.671Z","manager_id":1},
-            {"scholar_id":1,"name":"Joyme","address":"ronin:fa5b9aaacdc14c360a88cd210f4df0e098182135","personal_address":"ronin:b87d5c70997a2efa957467d216fc67c53d98282e", "slp_bal":100,"created_at":"2021-09-04T02:14:54.671Z","manager_id":1},
-            {"scholar_id":1,"name":"Joyme","address":"ronin:fa5b9aaacdc14c360a88cd210f4df0e098182135","personal_address":"ronin:b87d5c70997a2efa957467d216fc67c53d98282e", "slp_bal":50,"created_at":"2021-09-03T02:14:54.671Z","manager_id":1},
-          ],
-          [
-            {"scholar_id":2,"name":"Test1","address":"ronin:f4888bdaa3003ec4e8cb0682bd3cb99568633c64","personal_address":"ronin:9ecb9c08d75e86818bf0606a64dbdb8d36562dfa","slp_bal":300,"created_at":"2021-09-16T02:11:26.450Z","manager_id":1},
-            {"scholar_id":2,"name":"Test1","address":"ronin:f4888bdaa3003ec4e8cb0682bd3cb99568633c64","personal_address":"ronin:9ecb9c08d75e86818bf0606a64dbdb8d36562dfa","slp_bal":100,"created_at":"2021-09-15T02:14:54.671Z","manager_id":1}
-          ],
-        ]
+      //get past 2 weeks
+      this.scholarSnapshotsDaily = temp_json_data
+      this.scholarSnapshotsWeekly = temp_json_data
+      this.scholarSnapshotsMonthly = this.scholarSnapshotsWeekly = temp_json_data
       this.numberScholars = this.scholarSnapshotsDaily.length
     },
   }

@@ -1,73 +1,54 @@
 <template>
     <b-card class="">
-        <b-modal title="SLP Graph"
-            :id="'SLP'+cardDetails.timeFrame"
+        <b-modal v-if="showGraph" title="SLP Graph"
+            :id="'SLP'+header"
             size="md"
             hide-footer
             hide-header
         >
-        <slp-graph :data="data"/>
+            <line-chart  :data="data">
+            </line-chart>
         </b-modal>
-        <b-container v-b-modal="'SLP'+cardDetails.timeFrame" >
+        <b-container v-b-modal="'SLP'+header" >
             <b-row class="mb-3 ">
                 <b-col cols="9">
                     <b-card-text class="mr-2 ml-2 h4">
-                        {{cardDetails.cardName}}
+                        {{header}}
                     </b-card-text>
                 </b-col>
                 <b-col cols="3">
-                    <b-icon :icon="cardDetails.icon" class="h2 pr-2"></b-icon>
+                    <b-icon :icon="icon" class="h2 pr-2"></b-icon>
                 </b-col>
             </b-row>
             <b-card-text class="font-weight-bold h2 mt-3">
-                {{cardDetails.totalNum}}
+                {{midText}}
             </b-card-text>
             <b-card-text class="mr-2 pb-1 mb-1">
-                {{recentIncreaseText}}
+                {{bottomText}}
             </b-card-text>
         </b-container>
     </b-card>
 </template>
 
 <script>
-import { mapGetters } from "vuex"
-import SlpGraph from '@/components/SlpGraph.vue'
 
 export default {
     name: "generic-card",
-    /*
-        cardDetails is incoming JSON object with
-            cardName
-            icon
-            totalNum
-            recentIncrease
-            timeFrame
-    */
     props:{
-        cardDetails: Object,
-        data: Array
+        header: String,
+        showGraph: Boolean,
+        icon: String,
+        data: Array,
+        midText: String,
+        bottomText: String
     },
     components:{
-        SlpGraph
     },
     data(){
       return{
       }
     },
     computed:{
-        ...mapGetters(['getCurrentUser', 'getToken']),
-        recentIncreaseText(){
-            let returnString = ""
-            if (this.cardDetails.recentIncrease){
-                returnString = String.format('+{0} since ', this.cardDetails.recentIncrease)
-                if (this.cardDetails.timeFrame == "day"){
-                    returnString = returnString + 'yesterday'
-                }else{
-                    returnString = returnString + String.format('last ', this.cardDetails.timeFrame)
-                }
-            }
-            return returnString;
-        }
     },
     methods:{
     },
