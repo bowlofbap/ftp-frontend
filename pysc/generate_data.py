@@ -13,7 +13,6 @@ def main(users):
         days = user['days']
         starting_day = datetime.datetime.today() - datetime.timedelta(days)
         address = "ronin:"+''.join(random.choice(string.ascii_lowercase + string.digits) for _ in range(20))
-        print(address)
         personal_address = "ronin:"+''.join(random.choice(string.ascii_lowercase + string.digits) for _ in range(20))
         curr_slp = 0
         for x in range(0, days):

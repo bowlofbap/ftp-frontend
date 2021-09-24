@@ -33,7 +33,7 @@ import { mapGetters } from 'vuex'
 import temp_json_data from '../../temp/data.json'
 
 export default {
-  name: 'user-profile',
+  name: 'manager-profile',
   components: {
     UserInfo,
     ManageScholars
@@ -44,7 +44,6 @@ export default {
       scholarSnapshotsWeekly: null,
       scholarSnapshotsMonthly: null,
       numberScholars: 0,
-      profile: null
     }
   },
   computed:{
@@ -54,18 +53,23 @@ export default {
      */
     userPath(){
       this.fetchScholars();
+      this.fetchScholarsApi();
       return this.$route.params.username;
     },
   },
   methods:{
     fetchScholarsApi(){
-      const userid = this.$route.params.username;
-      fetch(`${process.env.VUE_APP_REMOTE_API}` + "/api/scholars/"+username)
+      const userid = this.$route.params.userid;
+      fetch(`${process.env.VUE_APP_REMOTE_API}` + "/api/snapshots/managers/"+userid, {
+          method: 'GET',
+          headers: {
+            'Authorization': 'Bearer '+this.getToken,
+      }})
       .then(response=>{
         return response.json();
       })
-      .then(profile=>{
-        this.profile = profile;
+      .then(snapshots=>{
+        console.log(snapshots)
       })
       .catch(err=>console.log(err));
     },

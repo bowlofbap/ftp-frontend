@@ -3,7 +3,7 @@ import Router from 'vue-router'
 import Home from './views/Home.vue'
 import Login from './views/Login.vue'
 import Register from './views/Register.vue'
-import UserProfile from './views/UserProfile.vue'
+import ManagerProfile from './views/ManagerProfile.vue'
 import LandingPage from '@/views/LandingPage'
 
 import auth from '@/store/modules/auth.js'
@@ -39,9 +39,9 @@ const router = new Router({
       }
     },
     {
-      path: "/profile/:username",
+      path: "/manager/:userid",
       name: "user-profile",
-      component: UserProfile,
+      component: ManagerProfile,
       meta: {
         requiresAuth: true
       }

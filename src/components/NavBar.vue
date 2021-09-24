@@ -13,7 +13,7 @@
       <!-- Right aligned nav items -->
       <b-navbar-nav class="ml-auto">
         <!--<b-nav-item class="mr-1"  :to="{ name: 'home'}"><b-icon :icon="homeIcon" class="te-primary-text"/></b-nav-item> -->
-        <b-nav-item class="mr-2" v-if="getCurrentUser" :to="{ name: 'user-profile', params:{username: getCurrentUser.sub}}"><b-icon :icon="homeIcon"/></b-nav-item>
+        <b-nav-item class="mr-2" v-if="getCurrentUser" :to="{ name: 'user-profile', params:{userid: getCurrentUser.sub}}"><b-icon :icon="homeIcon"/></b-nav-item>
         <b-nav-item class="mr-4" v-if="!getCurrentUser" :to="{ name: 'login'}"><b-icon :icon="loginIcon"/></b-nav-item>
       </b-navbar-nav>
     </b-collapse>

@@ -46,13 +46,19 @@ export default {
   methods: {
     ...mapActions(["loginUser"]),
     userLogin(){
+      console.log(JSON.stringify(this.user))
         fetch(`${process.env.VUE_APP_REMOTE_API}/users/sign_in`, {
           method: 'POST',
           headers: {
             Accept: 'application/json',
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify(this.user),
+          body: JSON.stringify({
+            user:{
+              email: this.user.email,
+              password: this.user.password
+            }
+          }),
         })
           .then((response) => {
             if (response.ok) {
