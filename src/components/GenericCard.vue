@@ -31,7 +31,7 @@
 </template>
 
 <script>
-
+//component to be used in all top cards as a generic component to display graphs if needed as well
 export default {
     name: "generic-card",
     props:{

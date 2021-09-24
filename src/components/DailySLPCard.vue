@@ -38,9 +38,8 @@ export default {
                     const currBal = scholar[i].slp_bal
                     diff = currBal - prevBal
                     const date = Date.parse(scholar[i].created_at)
-                    const timestamp = date//yr + "-" + mo + "-" + day
-                    const diffAdd = tempData[timestamp] ? tempData[timestamp] + diff : diff
-                    tempData[timestamp] = diffAdd
+                    const diffAdd = tempData[date] ? tempData[date] + diff : diff
+                    tempData[date] = diffAdd
                 }
             })
             Object.entries(tempData).sort().forEach(([key, value])=>{
