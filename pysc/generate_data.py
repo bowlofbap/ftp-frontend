@@ -33,6 +33,10 @@ def main(users):
     json.dump(data, f, indent=4)
 
 if __name__ == "__main__":
+    '''
+    To add new users, simply add a new object to the list of users defining a uniqe name and how many days of data to be generated.
+    To adjust the random SLP to be generated, change line 29 for the range of slp to be genned per day.
+    '''
     users = [
         {
             "name": "t1",
