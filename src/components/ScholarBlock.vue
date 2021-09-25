@@ -29,7 +29,7 @@
                     v-b-tooltip.hover
                     :title="getHoverTip"
                     @mouseleave="copied=false"
-                    v-clipboard:copy="scholar.address"
+                    v-clipboard:copy="scholarData.address"
                     v-clipboard:success="copyRonin">
                 <b-icon-clipboard></b-icon-clipboard>
             </b-button>
@@ -41,7 +41,7 @@
                     v-b-tooltip.hover
                     :title="getHoverTip"
                     @mouseleave="copied=false"
-                    v-clipboard:copy="scholar.personal_address"
+                    v-clipboard:copy="scholarData.personal_address"
                     v-clipboard:success="copyPersonalRonin">
                 <b-icon-clipboard></b-icon-clipboard>
             </b-button>
@@ -152,10 +152,10 @@ export default {
             return chartData
         },
         truncatedAddress(){
-            return this.scholar.address.slice(0,10) + "... " +this.scholar.address.slice(-4)
+            return this.scholarData.address.slice(0,10) + "... " +this.scholarData.address.slice(-4)
         },
         truncatedPersonalAddress(){
-            return this.scholarData.personal_address ?  this.scholar.personal_address.slice(0,10) + "... " +this.scholar.personal_address.slice(-4): "NO PERSONAL ADDRESS"
+            return this.scholarData.personal_address ?  this.scholarData.personal_address.slice(0,10) + "... " +this.scholarData.personal_address.slice(-4): "NO PERSONAL ADDRESS"
         },
         getHoverTip(){
             return this.copied ? "Copied!" : "Copy to Clipboard"
