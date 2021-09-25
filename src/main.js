@@ -2,6 +2,7 @@ import '@babel/polyfill'
 import 'mutationobserver-shim'
 import Vue from 'vue'
 import VueClipboard from 'vue-clipboard2'
+import Vuelidate from 'vuelidate'
 import './plugins/bootstrap-vue'
 import App from './App.vue'
 import router from './router'
@@ -16,6 +17,7 @@ Vue.use(IconsPlugin)
 Vue.use(VueClipboard)
 VueClipboard.config.autoSetContainer = true
 Vue.use(Chartkick.use(Chart))
+Vue.use(Vuelidate);
 
 new Vue({
   store,
