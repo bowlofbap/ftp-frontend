@@ -78,7 +78,6 @@
             <p>Profile Picture <i>(Optional)</i></p>
         </b-form-group>
       <b-button class="mt-3 mx-auto d-block" type="submit" :disabled="submitStatus === 'PENDING' || $v.$invalid" varient="success">Register</b-button>
-      {{submitStatus}}
       <b-card-sub-title class="mt-4 text-center">Already have an account? <b-link to="login" class="te-secondary-text">Log in!</b-link></b-card-sub-title>
     </b-form>
   </b-card>
