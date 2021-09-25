@@ -1,5 +1,5 @@
 <template>
-    <b-card class="">
+    <b-card class="shadow" style="cursor: pointer">
         <b-modal v-if="showGraph" title="SLP Graph"
             :id="'SLP'+header"
             size="md"
