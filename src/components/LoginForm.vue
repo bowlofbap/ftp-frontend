@@ -9,7 +9,7 @@
           class="mt-4"
           v-model="user.email"
           required
-          placeholder="Username"
+          placeholder="Email"
         ></b-form-input>
 
         <b-form-input
@@ -30,7 +30,7 @@
 
 
 <script>
-import { mapActions } from 'vuex';
+import { mapActions, mapGetters } from 'vuex';
 
 export default {
   name: 'login-form',
@@ -42,6 +42,9 @@ export default {
       },
       invalidCredentials: false,
     };
+  },
+  computed: {
+    ...mapGetters(['getCurrentUser']),
   },
   methods: {
     ...mapActions(["loginUser"]),
@@ -73,7 +76,7 @@ export default {
                 token = token.replace(/"/g, '');
               }
               this.loginUser(token);
-              this.$router.push('/home');
+              this.$router.push({path: '/manager/'+ this.getCurrentUser.sub});
             }
           })
           .catch((err) => {

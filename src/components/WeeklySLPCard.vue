@@ -17,7 +17,7 @@ export default {
     props:{
         header: String,
         icon: String,
-        data: Array
+        data: Object
     },
     components:{
         GenericCard
@@ -31,7 +31,7 @@ export default {
         getGraphData(){
             let chartData = []
             let tempData = {}
-            this.data.forEach(function(scholar){
+            for (const [_, scholar] of Object.entries(this.data)){
                 let day = 0
                 let weeklySlpTotal = 1
                 //iterate until > 0 because we don't want from day 0, we want the delta from 0->1
@@ -44,14 +44,18 @@ export default {
                         day++
                         weeklySlpTotal += diff
                     }else{
-                        const date = Date.parse(scholar[i].created_at)
-                        const diffAdd = tempData[date] ? tempData[date] + weeklySlpTotal : weeklySlpTotal
-                        tempData[date] = diffAdd
+                        const date = new Date(Date.parse(scholar[i].created_at))
+                        const dd = String(date.getDate()).padStart(2, '0');
+                        const mm = String(date.getMonth() + 1).padStart(2, '0'); 
+                        const yyyy = String(date.getFullYear());
+                        const normalizedDate = Date.parse(new Date(yyyy+'.'+mm+'.'+dd))
+                        const diffAdd = tempData[normalizedDate] ? tempData[normalizedDate] + weeklySlpTotal : weeklySlpTotal
+                        tempData[normalizedDate] = diffAdd
                         day = 0
                         weeklySlpTotal = 0
                     }
                 }
-            })
+            }
             Object.entries(tempData).sort().forEach(([key, value])=>{
                 chartData.push([new Date(+key), value])
             })

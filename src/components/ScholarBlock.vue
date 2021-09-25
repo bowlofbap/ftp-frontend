@@ -2,7 +2,7 @@
     <b-row class="ml-1 mb-4 ">
         
         <b-modal v-if="showGraph" title="Daily SLP Graph"
-            :id="'SLPDaily'+scholar.scholar_id"
+            :id="'SLPDaily'+scholarData.id"
             size="md"
             hide-footer
             hide-header>
@@ -11,7 +11,7 @@
         </b-modal>
         
         <b-modal v-if="showGraph" title="Weekly SLP Graph"
-            :id="'SLPWeekly'+scholar.scholar_id"
+            :id="'SLPWeekly'+scholarData.id"
             size="md"
             hide-footer
             hide-header>
@@ -19,13 +19,8 @@
             </line-chart>
         </b-modal>
 
-        <b-col cols="0"> 
-            <b-form-checkbox
-                :id="this.scholar.id"
-            />
-        </b-col>
         <b-col cols="2">
-            {{scholar.name}}
+            {{scholarData.name}}
         </b-col>
         <b-col cols="2">
             {{truncatedAddress}}
@@ -41,12 +36,12 @@
             NULL
         </b-col>
         <b-col cols="2">
-            <b-icon-eye v-b-modal="'SLPDaily'+scholar.scholar_id" />
+            <b-icon-eye v-b-modal="'SLPDaily'+scholarData.id" />
             {{dailySlp}}
             
         </b-col>
         <b-col cols="2">
-            <b-icon-eye v-b-modal="'SLPWeekly'+scholar.scholar_id" />
+            <b-icon-eye v-b-modal="'SLPWeekly'+scholarData.id" />
             {{weeklySlp}}
         </b-col>
     </b-row>
@@ -61,7 +56,8 @@ export default {
         
     },
     props:{
-        scholarSnapshotData: Array
+        scholarSnapshotData: Array,
+        scholarData: Object
     },
     data(){
         return{
@@ -71,23 +67,18 @@ export default {
     computed:{
         ...mapGetters(['getCurrentUser']),
         dailySlp(){
-            let prev_bal = null
+            if (!this.scholarSnapshotData) { return 0 }
+            const pastWeekData = this.scholarSnapshotData.slice(1).slice(-7)
+            const denominator = pastWeekData.length 
             //reduces the weekly snapshot into last 7 days and gets average of the slp gains between them
-            return parseInt(Object.entries(this.scholarSnapshotData.slice(1).slice(-7)).reduce(function (total, pair) {
-                    const [_, value] = pair;
-                    let diff = 0
-                    if (prev_bal){
-                        diff = value.slp_bal - prev_bal
-                    }
-                    prev_bal = value.slp_bal
-                    return total + diff;
-                    }, 0) / 7)
+            return parseInt(this.weeklySlp / denominator)
         },
         showGraph(){
             return true
         },
         weeklySlp(){
             //reduces the last 7 days for the gains 
+            if (!this.scholarSnapshotData) { return 0 }
             let prev_bal = null
             return parseInt(Object.entries(this.scholarSnapshotData.slice(1).slice(-7)).reduce(function (total, pair) {
                     const [_, value] = pair;
@@ -100,6 +91,7 @@ export default {
                     }, 0))
         },
         getDailyGraphData(){
+            if (!this.scholarSnapshotData) { return {} }
             let chartData = []
             let tempData = {}
             for (let i = this.scholarSnapshotData.length-1; i > 0; i--){
@@ -118,6 +110,7 @@ export default {
             return chartData
         },
         getWeeklyGraphData(){
+            if (!this.scholarSnapshotData) { return {} }
             let chartData = []
             let tempData = {}
             let day = 0
@@ -144,14 +137,11 @@ export default {
             })
             return chartData
         },
-        scholar(){
-            return this.scholarSnapshotData[0]
-        },
         truncatedAddress(){
-            return "..."+this.scholar.address.slice(-8)
+            return "..."+this.scholarData.address.slice(-8)
         },
         truncatedPersonalAddress(){
-            return "..."+this.scholar.personal_address.slice(-8)
+            return this.scholarData.personal_address ?  "..."+this.scholarData.personal_address.slice(-8) : "NO PERSONAL ADDRESS"
         },
         getHoverTip(){
             return this.copied ? "Copied!" : "Copy to Clipboard"
@@ -159,11 +149,11 @@ export default {
     },
     methods:{
         copyPersonalRonin(){
-            console.log(this.scholar.personal_address)
+            console.log(this.scholarData.personal_address)
             this.copied = true
         },
         copyRonin(){
-            console.log(this.scholar.address)
+            console.log(this.scholarData.address)
             this.copied = true
         }
     }

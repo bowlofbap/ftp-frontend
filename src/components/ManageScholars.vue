@@ -1,13 +1,8 @@
 <template>
 <div>
+    
     <b-card class="ml-4 mr-4 dark">
         <b-row class="ml-1">
-            <b-col cols="0"> 
-                <b-form-checkbox
-                    id="checkbox-1"
-                    name="checkbox-1"
-                />
-            </b-col>
             <b-col cols="2">
                 Name
             </b-col>
@@ -29,9 +24,10 @@
         </b-row>
     </b-card>
     <b-card class="ml-4 mr-4 mb-4">
-        <scholar-block v-for="scholarSnapshots in scholarSnapshotsWeekly"
-                        :key="scholarSnapshots[0].id"
-                        :scholarSnapshotData="scholarSnapshots"
+        <scholar-block v-for="scholar in scholarsInfo"
+                        :key="scholar.id"
+                        :scholarData="scholar"
+                        :scholarSnapshotData="getScholarSnapshotData(scholar.id)"
         />
     </b-card>
 </div>
@@ -48,7 +44,8 @@ export default {
     },
 
     props:{
-        scholarSnapshotsWeekly: Array,
+        scholarsInfo: Array,
+        scholarSnapshots: Object,
     },
     data(){
         return{
@@ -59,6 +56,9 @@ export default {
         ...mapGetters(['getCurrentUser']),
     },
     methods:{
+        getScholarSnapshotData(scholar_id){
+            return this.scholarSnapshots[scholar_id]
+        }
     }
 }
 </script>

@@ -40,15 +40,11 @@ if __name__ == "__main__":
     users = [
         {
             "name": "t1",
-            "days": 23
+            "days": 300
         },
         {
             "name": "d1",
-            "days": 33
+            "days": 390
         },
-        {
-            "name": "c1",
-            "days": 44
-        }
     ]
     main(users)

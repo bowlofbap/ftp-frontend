@@ -33,9 +33,9 @@ export default {
 
     props:{
         numberScholars: Number,
-        scholarSnapshotsDaily: Array,
-        scholarSnapshotsWeekly: Array,
-        scholarSnapshotsMonthly: Array,
+        scholarSnapshotsDaily: Object,
+        scholarSnapshotsWeekly: Object,
+        scholarSnapshotsMonthly: Object,
     },
     data(){
         return{
@@ -60,13 +60,6 @@ export default {
     },
     computed:{
         ...mapGetters(['getCurrentUser']),
-        slpOverview(){
-            const cardInfo = {
-                cardName: "Total Daily SLP",
-                icon: "gem",
-            }
-            return cardInfo
-        },
     },
     methods:{
         getSlpGain(scholarSnapshotsArray){

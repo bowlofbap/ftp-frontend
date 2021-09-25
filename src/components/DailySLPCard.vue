@@ -17,7 +17,7 @@ export default {
     props:{
         header: String,
         icon: String,
-        data: Array
+        data: Object
     },
     components:{
         GenericCard
@@ -31,17 +31,21 @@ export default {
         getGraphData(){
             let chartData = []
             let tempData = {}
-            this.data.forEach(function(scholar){
+            for (const [_, scholar] of Object.entries(this.data)){
                 for (let i = scholar.length-1; i > 0; i--){
                     let diff = 0
                     const prevBal = scholar[i-1].slp_bal
                     const currBal = scholar[i].slp_bal
                     diff = currBal - prevBal
-                    const date = Date.parse(scholar[i].created_at)
-                    const diffAdd = tempData[date] ? tempData[date] + diff : diff
-                    tempData[date] = diffAdd
+                    const date = new Date(Date.parse(scholar[i].created_at))
+                    const dd = String(date.getDate()).padStart(2, '0');
+                    const mm = String(date.getMonth() + 1).padStart(2, '0'); 
+                    const yyyy = String(date.getFullYear());
+                    const normalizedDate = Date.parse(new Date(yyyy+'.'+mm+'.'+dd))
+                    const diffAdd = tempData[normalizedDate] ? tempData[normalizedDate] + diff : diff
+                    tempData[normalizedDate] = diffAdd
                 }
-            })
+            }
             Object.entries(tempData).sort().forEach(([key, value])=>{
                 chartData.push([new Date(+key), value])
             })
@@ -57,6 +61,9 @@ export default {
                 }
             }
         },
+        showableGraph(){
+            return this.getGraphData.length > 0
+        },
         todaysIncrease(){
             const graphData = this.getGraphData 
             if (graphData.length > 0) {
@@ -66,8 +73,12 @@ export default {
             return 0
         },
         recentIncreaseText(){
-            let returnString = this.getRecentIncrease + ' compared to yesterday'
-            return this.getRecentIncrease >= 0 ? '+' + returnString : returnString;
+            if (this.showableGraph){
+                let returnString = this.getRecentIncrease + ' compared to yesterday'
+                return this.getRecentIncrease >= 0 ? '+' + returnString : returnString;
+            }else{
+                return "Not enough data to compare to previous weeks"
+            }
         },
     },
     methods:{
