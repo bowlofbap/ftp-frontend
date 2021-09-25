@@ -12,58 +12,72 @@
     
     <b-form @submit.prevent="register">
         <b-form-group class="mt-4" 
-                      label="Username" 
-                      :state="usernameValid" 
-                      :invalid-feedback="usernameInvalidFeedback">
+                      label="Username">
           <b-form-input
-            v-model="userProfile.username"
-            required
+            v-model.trim="$v.username.$model"
+            @input="delayTouch($v.username)"
           ></b-form-input>
+          <div v-if="$v.username.$dirty && $v.username.$anyError">
+            <div class="invalid-feedback d-block" v-if="!$v.username.required">Required!</div>
+            <div class="invalid-feedback d-block" v-if="!$v.username.minLength">Username must have at least {{$v.username.$params.minLength.min}} letters.</div>
+            <div class="invalid-feedback d-block" v-if="!$v.username.maxLength">Username must no more than {{$v.username.$params.maxLength.max}} letters.</div>
+          </div>
         </b-form-group>
 
         <b-form-group class="mt-3" 
                       label="Password"
-                      :state="passwordStrong" 
-                      :invalid-feedback="passwordStrongFeedback">
+                      >
           <b-form-input
-            v-model="userProfile.password"
-            required
+            v-model.trim="$v.password.$model"
+            @input="delayTouch($v.password)"
             type="password"
           ></b-form-input>
+          <div v-if="$v.password.$dirty && $v.password.$anyError">
+            <div class="invalid-feedback d-block" v-if="!$v.password.required">Required!</div>
+            <div class="invalid-feedback d-block" v-if="!$v.password.minLength">Password must have at least {{$v.password.$params.minLength.min}} letters.</div>
+            <div class="invalid-feedback d-block" v-if="!$v.password.maxLength">Password must not exceed {{$v.password.$params.maxLength.max}} letters.</div>
+            <div class="invalid-feedback d-block" v-if="!$v.password.mustHaveAtLeastOneSpecialCharacter">Password must contain at least one special character (!, @, #, $, etc).</div>
+            <div class="invalid-feedback d-block" v-if="!$v.password.mustHaveAtLeastOneLowercaseLetter">Password must contain at least one lower case letter.</div>
+            <div class="invalid-feedback d-block" v-if="!$v.password.mustHaveAtLeastOneUppercaseLetter">Password must contain at least one upper case letter.</div>
+          </div>
         </b-form-group>
 
         <b-form-group class="mt-3" 
-                      label="Confirm Password"
-                      :state="passwordMatches" 
-                      :invalid-feedback="passwordMatchesFeedback">
+                      label="Confirm Password">
           <b-form-input
-            v-model="userProfile.confirmPassword"
-            required
+            v-model="$v.confirmPassword.$model"
+            @input="delayTouch($v.confirmPassword)"
             type="password"
           ></b-form-input>
+          <div v-if="$v.confirmPassword.$dirty && $v.confirmPassword.$anyError">
+            <div class="invalid-feedback d-block" v-if="!$v.confirmPassword.sameAsPassword">Passwords must match!</div>
+          </div>
         </b-form-group>
 
-        <b-form-group class="mt-3" label="First Name"
-                      :state="firstNameFilled" 
-                      :invalid-feedback="firstNameFilledFeedback">
+        <b-form-group class="mt-3" label="First Name">
           <b-form-input
-            v-model="userProfile.firstName"
-            required
+            v-model.trim="$v.firstName.$model"
+            @input="delayTouch($v.firstName)"
           ></b-form-input>
+          <div v-if="$v.firstName.$dirty && $v.firstName.$anyError">
+            <div class="invalid-feedback d-block" v-if="!$v.firstName.required">Required!</div>
+          </div>
         </b-form-group>
 
-        <b-form-group class="mt-3" label="Last Name"
-                      :state="lastNameFilled" 
-                      :invalid-feedback="lastNameFilledFeedback">
+        <b-form-group class="mt-3" label="Last Name">
           <b-form-input
-            v-model="userProfile.lastName"
-            required
+            v-model.trim="$v.lastName.$model"
+            @input="delayTouch($v.lastName)"
           ></b-form-input>
+          <div v-if="$v.lastName.$dirty && $v.lastName.$anyError">
+            <div class="invalid-feedback d-block" v-if="!$v.lastName.required">Required!</div>
+          </div>
         </b-form-group>
 
-        <b-form-group class="mt-3" label="Profile Picture (Optional)">
+        <b-form-group class="mt-3">
+            <p>Profile Picture <i>(Optional)</i></p>
         </b-form-group>
-      <b-button class="mt-3 mx-auto d-block" type="submit" variant="success">Register</b-button>
+      <b-button class="mt-3 mx-auto d-block" type="submit" :disabled="submitStatus === 'PENDING' || $v.$invalid" varient="success">Register</b-button>
       <b-card-sub-title class="mt-4 text-center">Already have an account? <b-link to="login" class="te-secondary-text">Log in!</b-link></b-card-sub-title>
     </b-form>
   </b-card>
@@ -71,6 +85,20 @@
 </template>
 
 <script>
+import { required, minLength, maxLength, sameAs } from 'vuelidate/lib/validators';
+
+// check if input has been touched
+const touchMap = new WeakMap();
+ 
+const specialCharRegex = /[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]+/;
+const capitalCharRegex = /(?=.*[A-Z])/;
+const lowercaseCharRegex = /(?=.*[a-z])/;
+const inputTimeoutInMs = 1000;
+
+// Custom Validators
+const mustHaveAtLeastOneSpecialCharacter = (value) => specialCharRegex.test(value);
+const mustHaveAtLeastOneUppercaseLetter = (value) => capitalCharRegex.test(value);
+const mustHaveAtLeastOneLowercaseLetter = (value) => lowercaseCharRegex.test(value);
 
 export default {
   name: 'register',
@@ -78,104 +106,98 @@ export default {
   },
   data() {
     return {
-      userProfile: {
-        username: '',
-        password: '',
-        confirmPassword: '',
-        role: 'user',
-        id: null,
-        firstName: '',
-        lastName: '',
-        profilePicUrl: ''
-      },
+      // user profile
+      username: '',
+      password: '',
+      confirmPassword: '',
+      role: 'user',
+      id: null,
+      firstName: '',
+      lastName: '',
+      profilePicUrl: '',
+
+      // error handling
       registrationError: false,
-      specialCharRegex: /[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]+/,
-      capitalCharRegex: /(?=.*[A-Z])/,
-      lowercaseCharRegex: /(?=.*[a-z])/
+      submitStatus: null
     };
   },
-  computed:{
-    usernameValid(){
-      return this.userProfile.username.length > 4 && this.userProfile.username.length < 15 ? true : false;
+  validations: {
+    username: {
+      required,
+      minLength: minLength(4),
+      maxLength: maxLength(15)
     },
-    usernameInvalidFeedback(){
-      if (this.userProfile.username.length > 14) {
-        return "Username too long!";
-      }else if (this.userProfile.username.length < 5){
-        return "Please enter more than 4 characters."
-      }
-      return "";
+    password: {
+      required,
+      minLength: minLength(7),
+      maxLength: maxLength(31),
+      mustHaveAtLeastOneSpecialCharacter,
+      mustHaveAtLeastOneUppercaseLetter,
+      mustHaveAtLeastOneLowercaseLetter
     },
-    passwordStrong(){
-      return this.userProfile.password.length > 7 && this.userProfile.password.length < 31 && this.specialCharRegex.test(this.userProfile.password) && this.capitalCharRegex.test(this.userProfile.password) && this.lowercaseCharRegex.test(this.userProfile.password)
+    confirmPassword: {
+      sameAsPassword: sameAs('password')
     },
-    passwordStrongFeedback(){
-      if (this.userProfile.password.length < 8) {
-        return "Password must be at least 8 characters long."
-      }else if (this.userProfile.password.length > 30) {
-        return "Password cannot exceed 30 characters."
-      }else if (!this.specialCharRegex.test(this.userProfile.password)){
-        return "Password must contain at least one special character (!, @, #, $, etc)."
-      }else if (!this.capitalCharRegex.test(this.userProfile.password)){
-        return "Password must contain at least one upper case letter."
-      }else if (!this.lowercaseCharRegex.test(this.userProfile.password)){
-        return "Password must contain at least one lower case letter."
-      }
-      return "";
+    firstName: {
+      required
     },
-    passwordMatches(){
-      return this.userProfile.password === this.userProfile.confirmPassword;
-    },
-    passwordMatchesFeedback(){
-      if (this.userProfile.password !== this.userProfile.confirmPassword){
-        return "Passwords must match!"
-      }
-      return "";
-    },
-    firstNameFilled(){
-      return this.userProfile.firstName.length > 0;
-    },
-    firstNameFilledFeedback(){
-      if (this.userProfile.firstName.length < 1){
-        return "Required!"
-      }
-      return ""
-    },
-    lastNameFilled(){
-      return this.userProfile.lastName.length > 0;
-    },
-    lastNameFilledFeedback(){
-      if (this.userProfile.lastName.length < 1){
-        return "Required!"
-      }
-      return ""
+    lastName: {
+      required
     }
   },
+  computed:{
+  },
   methods: {
+    delayTouch($v) {
+      $v.$reset()
+      if (touchMap.has($v)) {
+        clearTimeout(touchMap.get($v))
+      }
+      touchMap.set($v, setTimeout($v.$touch, inputTimeoutInMs))
+    },
     register() {
-      if (this.usernameValid && this.passwordStrong && this.passwordMatches && this.firstNameFilled && this.lastNameFilled)
+      if (!this.$v.$invalid) {
+        this.submitStatus = 'PENDING';
+        const userProfile = {
+          username: this.username,
+          password: this.password,
+          confirmPassword: this.confirmPassword,
+          role: this.role,
+          id: null,
+          firstName: this.firstName,
+          lastName: this.lastName,
+          profilePicUrl: this.profilePicUrl,
+        }
+        console.log(userProfile);
         fetch(`${process.env.VUE_APP_REMOTE_API}/register`, {
           method: 'POST',
           headers: {
             Accept: 'application/json',
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify(this.userProfile),
+          // TODO: Place user profile in {}
+          body: JSON.stringify(userProfile),
         })
           .then((response) => {
             if (response.ok){
+              this.submitStatus = 'OK';
               this.$router.push({ path: '/login', query: { registration: 'success' } });
-            }else{
+            } else {
+              this.submitStatus = 'ERROR';
               this.registrationError = true;
             }
           })
-          .catch((err) => console.error(err));
-      else{
+          .catch((err) => {
+            this.submitStatus = 'ERROR';
+            console.error(err);
+          });
+      } else {
         this.registrationError = true;
+        this.submitStatus = 'ERROR';
       }
     },
     setUrl(url){
-      this.userProfile.profilePicUrl = url;
+      this.profilePicUrl = url;
     }
   }
 };
