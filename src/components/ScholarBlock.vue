@@ -29,13 +29,27 @@
         </b-col>
         <b-col cols="2">
             {{truncatedAddress}}
-        <b-icon-clipboard v-b-tooltip.hover :title="getHoverTip" @click="copyRonin" @mouseleave="copied=false">
-        </b-icon-clipboard>
+            <b-button
+                    size="sm"
+                    v-b-tooltip.hover
+                    :title="getHoverTip"
+                    @mouseleave="copied=false"
+                    v-clipboard:copy="scholar.address"
+                    v-clipboard:success="copyRonin">
+                <b-icon-clipboard></b-icon-clipboard>
+            </b-button>
         </b-col>
         <b-col cols="2">
             {{truncatedPersonalAddress}}
-            <b-icon-clipboard v-b-tooltip.hover :title="getHoverTip" @click="copyPersonalRonin" @mouseleave="copied=false">
-            </b-icon-clipboard>
+            <b-button
+                    size="sm"
+                    v-b-tooltip.hover
+                    :title="getHoverTip"
+                    @mouseleave="copied=false"
+                    v-clipboard:copy="scholar.personal_address"
+                    v-clipboard:success="copyPersonalRonin">
+                <b-icon-clipboard></b-icon-clipboard>
+            </b-button>
         </b-col>
         <b-col cols="1">
             NULL
@@ -148,10 +162,10 @@ export default {
             return this.scholarSnapshotData[0]
         },
         truncatedAddress(){
-            return "..."+this.scholar.address.slice(-8)
+            return this.scholar.address.slice(0,10) + "... " +this.scholar.address.slice(-4)
         },
         truncatedPersonalAddress(){
-            return "..."+this.scholar.personal_address.slice(-8)
+            return this.scholar.personal_address.slice(0,10) + "... " +this.scholar.personal_address.slice(-4)
         },
         getHoverTip(){
             return this.copied ? "Copied!" : "Copy to Clipboard"
