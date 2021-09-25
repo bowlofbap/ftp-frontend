@@ -70,7 +70,7 @@ export default {
                 let returnString = graphData[graphData.length-1][1] 
                 return returnString >= 0 ? '+' + returnString : returnString;
             }
-            return 0
+            return ''+0
         },
         recentIncreaseText(){
             if (this.showableGraph){

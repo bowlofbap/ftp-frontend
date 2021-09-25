@@ -12,15 +12,13 @@
     
     <b-form @submit.prevent="register">
         <b-form-group class="mt-4" 
-                      label="Username">
+                      label="Email">
           <b-form-input
             v-model.trim="$v.username.$model"
             @input="delayTouch($v.username)"
           ></b-form-input>
           <div v-if="$v.username.$dirty && $v.username.$anyError">
             <div class="invalid-feedback d-block" v-if="!$v.username.required">Required!</div>
-            <div class="invalid-feedback d-block" v-if="!$v.username.minLength">Username must have at least {{$v.username.$params.minLength.min}} letters.</div>
-            <div class="invalid-feedback d-block" v-if="!$v.username.maxLength">Username must no more than {{$v.username.$params.maxLength.max}} letters.</div>
           </div>
         </b-form-group>
 
@@ -51,26 +49,6 @@
           ></b-form-input>
           <div v-if="$v.confirmPassword.$dirty && $v.confirmPassword.$anyError">
             <div class="invalid-feedback d-block" v-if="!$v.confirmPassword.sameAsPassword">Passwords must match!</div>
-          </div>
-        </b-form-group>
-
-        <b-form-group class="mt-3" label="First Name">
-          <b-form-input
-            v-model.trim="$v.firstName.$model"
-            @input="delayTouch($v.firstName)"
-          ></b-form-input>
-          <div v-if="$v.firstName.$dirty && $v.firstName.$anyError">
-            <div class="invalid-feedback d-block" v-if="!$v.firstName.required">Required!</div>
-          </div>
-        </b-form-group>
-
-        <b-form-group class="mt-3" label="Last Name">
-          <b-form-input
-            v-model.trim="$v.lastName.$model"
-            @input="delayTouch($v.lastName)"
-          ></b-form-input>
-          <div v-if="$v.lastName.$dirty && $v.lastName.$anyError">
-            <div class="invalid-feedback d-block" v-if="!$v.lastName.required">Required!</div>
           </div>
         </b-form-group>
 
@@ -107,10 +85,6 @@ export default {
       username: '',
       password: '',
       confirmPassword: '',
-      role: 'user',
-      id: null,
-      firstName: '',
-      lastName: '',
 
       // error handling
       registrationError: false,
@@ -120,8 +94,6 @@ export default {
   validations: {
     username: {
       required,
-      minLength: minLength(4),
-      maxLength: maxLength(15)
     },
     password: {
       required,
@@ -134,12 +106,6 @@ export default {
     confirmPassword: {
       sameAsPassword: sameAs('password')
     },
-    firstName: {
-      required
-    },
-    lastName: {
-      required
-    }
   },
   computed:{
   },
@@ -154,24 +120,19 @@ export default {
     register() {
       if (!this.$v.$invalid) {
         this.submitStatus = 'PENDING';
-        const userProfile = {
-          username: this.username,
-          password: this.password,
-          confirmPassword: this.confirmPassword,
-          role: this.role,
-          id: null,
-          firstName: this.firstName,
-          lastName: this.lastName,
-        }
-        console.log(userProfile);
-        fetch(`${process.env.VUE_APP_REMOTE_API}/register`, {
+        fetch(`${process.env.VUE_APP_REMOTE_API}/users`, {
           method: 'POST',
           headers: {
             Accept: 'application/json',
             'Content-Type': 'application/json',
           },
           // TODO: Place user profile in {}
-          body: JSON.stringify(userProfile),
+          body: JSON.stringify({
+              user: {
+                email: this.username,
+                password: this.password
+              }
+            }),
         })
           .then((response) => {
             if (response.ok){
