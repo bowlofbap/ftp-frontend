@@ -68,6 +68,7 @@ export default {
       scholarSnapshotsWeekly: null,
       scholarSnapshotsMonthly: null,
       scholarsInfo: null,
+      numberScholars: 0
     }
   },
   computed:{
@@ -82,9 +83,6 @@ export default {
     graphsAreShowable(){
       return this.scholarSnapshotsDaily && this.scholarSnapshotsWeekly && this.scholarSnapshotsMonthly
     },
-    numberScholars(){
-      return this.scholarsInfo ? this.scholarsInfo.length : 0
-    }
   },
   methods:{
     fetchScholars(daysBack){
@@ -117,6 +115,7 @@ export default {
       })
       .then(scholarsInfo => {
         this.scholarsInfo = scholarsInfo
+        this.numberScholars = this.scholarsInfo ? this.scholarsInfo.length : 0
       })
       .catch(err=>console.log(err));
     },
