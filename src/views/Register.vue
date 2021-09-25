@@ -157,6 +157,7 @@ export default {
     },
     register() {
       if (!this.$v.$invalid) {
+        this.submitStatus = 'PENDING';
         const userProfile = {
           username: this.username,
           password: this.password,
@@ -179,14 +180,20 @@ export default {
         })
           .then((response) => {
             if (response.ok){
+              this.submitStatus = 'OK';
               this.$router.push({ path: '/login', query: { registration: 'success' } });
             } else {
+              this.submitStatus = 'ERROR';
               this.registrationError = true;
             }
           })
-          .catch((err) => console.error(err));
+          .catch((err) => {
+            this.submitStatus = 'ERROR';
+            console.error(err);
+          });
       } else {
         this.registrationError = true;
+        this.submitStatus = 'ERROR';
       }
     },
     setUrl(url){
