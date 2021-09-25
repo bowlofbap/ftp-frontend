@@ -6,14 +6,11 @@
             <b-col cols="2">
                 Name
             </b-col>
-            <b-col cols="2">
+            <b-col cols="3">
                 Scholar Ronin
             </b-col>
-            <b-col cols="2">
+            <b-col cols="3">
                 Personal Ronin
-            </b-col>
-            <b-col cols="1">
-                Previous Pay Date
             </b-col>
             <b-col cols="2">
                 Average Daily SLP 

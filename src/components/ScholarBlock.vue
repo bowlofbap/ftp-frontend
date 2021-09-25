@@ -22,7 +22,7 @@
         <b-col cols="2">
             {{scholarData.name}}
         </b-col>
-        <b-col cols="2">
+        <b-col cols="3">
             {{truncatedAddress}}
             <b-button
                     size="sm"
@@ -30,11 +30,12 @@
                     :title="getHoverTip"
                     @mouseleave="copied=false"
                     v-clipboard:copy="scholarData.address"
-                    v-clipboard:success="copyRonin">
-                <b-icon-clipboard></b-icon-clipboard>
+                    v-clipboard:success="copyRonin"
+                    >
+                <b-icon-clipboard ></b-icon-clipboard>
             </b-button>
         </b-col>
-        <b-col cols="2">
+        <b-col cols="3">
             {{truncatedPersonalAddress}}
             <b-button
                     size="sm"
@@ -45,9 +46,6 @@
                     v-clipboard:success="copyPersonalRonin">
                 <b-icon-clipboard></b-icon-clipboard>
             </b-button>
-        </b-col>
-        <b-col cols="1">
-            NULL
         </b-col>
         <b-col cols="2">
             <b-icon-eye v-b-modal="'SLPDaily'+scholarData.id" />
