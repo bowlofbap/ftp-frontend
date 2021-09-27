@@ -80,7 +80,7 @@ export default {
         ...mapGetters(['getCurrentUser']),
         dailySlp(){
             if (!this.scholarSnapshotData) { return 0 }
-            const pastWeekData = this.scholarSnapshotData.slice(1).slice(-7)
+            const pastWeekData = this.scholarSnapshotData.slice(-7)
             const denominator = pastWeekData.length 
             //reduces the weekly snapshot into last 7 days and gets average of the slp gains between them
             return parseInt(this.weeklySlp / denominator)
@@ -92,11 +92,12 @@ export default {
             //reduces the last 7 days for the gains 
             if (!this.scholarSnapshotData) { return 0 }
             let prev_bal = null
-            return parseInt(Object.entries(this.scholarSnapshotData.slice(1).slice(-7)).reduce(function (total, pair) {
-                    const [_, value] = pair;
+            return parseInt(Object.entries(this.scholarSnapshotData.slice(-7)).reduce(function (total, pair) {
+                    const [, value] = pair;
                     let diff = 0
-                    if (prev_bal){
+                    if (prev_bal != null){
                         diff = value.slp_bal - prev_bal
+                        console.log(value.scholar_id, diff)
                     }
                     prev_bal = value.slp_bal
                     return total + diff;

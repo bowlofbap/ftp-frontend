@@ -1,6 +1,6 @@
 <template>
   <!--using v-bind:key to the computed property userPath, we can force a reload of the entire component when the path changes-->
-  <div class="userProfile" :key="userPath">
+  <div class="userProfile">
     <user-info v-if="graphsAreShowable" 
                :numberScholars="numberScholars"
                :scholarSnapshotsDaily="scholarSnapshotsDaily"
@@ -49,7 +49,7 @@ import UserInfo from "@/components/UserInfo.vue"
 import ManageScholars from '@/components/ManageScholars.vue'
 import AddNewScholarForm from '@/components/AddNewScholarForm.vue'
 import { mapGetters } from 'vuex'
-import temp_json_data from '../../temp/data.json'
+//import temp_json_data from '../../temp/data.json'
 import LogoutButton from '../components/LogoutButton.vue'
 import DeleteScholars from '../components/DeleteScholars.vue'
 
@@ -78,6 +78,7 @@ export default {
      */
     userPath(){
       this.updateScholarData()
+      console.log("hello")
       return this.$route.params.userid;
     },
     graphsAreShowable(){
@@ -130,7 +131,13 @@ export default {
         this.scholarSnapshotsMonthly = response
       });
       this.fetchScholarInfo()
-    }
+      console.log(this.scholarSnapshotsDaily)
+    },
+  },
+  mounted: function() {
+    this.updateScholarData()
+    console.log("hello")
+    return this.$route.params.userid;
   }
 }
 </script>
