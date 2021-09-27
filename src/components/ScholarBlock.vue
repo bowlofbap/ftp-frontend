@@ -18,8 +18,17 @@
             <line-chart  :data="getWeeklyGraphData">
             </line-chart>
         </b-modal>
+        
+        <b-modal v-if="showGraph" title="ELO Graph"
+            :id="'ELO'+scholarData.id"
+            size="md"
+            hide-footer
+            hide-header>
+            <line-chart :data="getEloGraphData">
+            </line-chart>
+        </b-modal>
 
-        <b-col cols="2">
+        <b-col cols="1">
             {{scholarData.name}}
         </b-col>
         <b-col cols="3">
@@ -47,10 +56,13 @@
                 <b-icon-clipboard></b-icon-clipboard>
             </b-button>
         </b-col>
+        <b-col cols="1">
+            <b-icon-eye v-b-modal="'ELO'+scholarData.id" />
+            {{elo}}
+        </b-col>
         <b-col cols="2">
             <b-icon-eye v-b-modal="'SLPDaily'+scholarData.id" />
             {{dailySlp}}
-            
         </b-col>
         <b-col cols="2">
             <b-icon-eye v-b-modal="'SLPWeekly'+scholarData.id" />
@@ -97,11 +109,26 @@ export default {
                     let diff = 0
                     if (prev_bal != null){
                         diff = value.slp_bal - prev_bal
-                        console.log(value.scholar_id, diff)
                     }
                     prev_bal = value.slp_bal
                     return total + diff;
                     }, 0))
+        },
+        elo(){
+            return this.scholarSnapshotData ? this.scholarSnapshotData[this.scholarSnapshotData.length-1].elo : 0
+        },
+        getEloGraphData(){
+            if (!this.scholarSnapshotData) { return {} }
+            let chartData = []
+            let tempData = {}
+            for (let i = this.scholarSnapshotData.length-1; i > 0; i--){
+                const date = Date.parse(this.scholarSnapshotData[i].created_at)
+                tempData[date] = this.scholarSnapshotData[i].elo
+            }
+            Object.entries(tempData).sort().forEach(([key, value])=>{
+                chartData.push([new Date(+key), value])
+            })
+            return chartData
         },
         getDailyGraphData(){
             if (!this.scholarSnapshotData) { return {} }
@@ -113,9 +140,8 @@ export default {
                 const currBal = this.scholarSnapshotData[i].slp_bal
                 diff = currBal - prevBal
                 const date = Date.parse(this.scholarSnapshotData[i].created_at)
-                const timestamp = date//yr + "-" + mo + "-" + day
-                const diffAdd = tempData[timestamp] ? tempData[timestamp] + diff : diff
-                tempData[timestamp] = diffAdd
+                const diffAdd = tempData[date] ? tempData[date] + diff : diff
+                tempData[date] = diffAdd
             }
             Object.entries(tempData).sort().forEach(([key, value])=>{
                 chartData.push([new Date(+key), value])

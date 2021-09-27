@@ -73,14 +73,6 @@ export default {
   },
   computed:{
     ...mapGetters(['getCurrentUser', 'getToken']),
-    /**
-     * this userPath will be used as the refresh forcer for the whole component, and will fetch the components' required data acting as a pseudo-created method 
-     */
-    userPath(){
-      this.updateScholarData()
-      console.log("hello")
-      return this.$route.params.userid;
-    },
     graphsAreShowable(){
       return this.scholarSnapshotsDaily && this.scholarSnapshotsWeekly && this.scholarSnapshotsMonthly
     },
@@ -131,12 +123,10 @@ export default {
         this.scholarSnapshotsMonthly = response
       });
       this.fetchScholarInfo()
-      console.log(this.scholarSnapshotsDaily)
     },
   },
   mounted: function() {
     this.updateScholarData()
-    console.log("hello")
     return this.$route.params.userid;
   }
 }
