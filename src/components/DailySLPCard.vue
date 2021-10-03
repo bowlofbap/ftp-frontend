@@ -36,6 +36,9 @@ export default {
                     let diff = 0
                     const prevBal = scholar[i-1].slp_bal
                     const currBal = scholar[i].slp_bal
+                    if (currBal == 0){
+                        continue
+                    }
                     diff = currBal - prevBal
                     const date = new Date(Date.parse(scholar[i].created_at))
                     const dd = String(date.getDate()).padStart(2, '0');

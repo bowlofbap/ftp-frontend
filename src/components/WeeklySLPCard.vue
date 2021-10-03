@@ -39,6 +39,9 @@ export default {
                     let diff = 0
                     const prevBal = scholar[i-1].slp_bal
                     const currBal = scholar[i].slp_bal
+                    if (currBal == 0){
+                        continue
+                    }
                     diff = currBal - prevBal
                     if (day < 6){
                         day++

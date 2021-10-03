@@ -102,10 +102,10 @@ export default {
         },
         weeklySlp(){
             //reduces the last 7 days for the gains 
+            const weekData = this.getSevenValidDaysData
             if (!this.scholarSnapshotData) { return 0 }
             let prev_bal = null
-            return parseInt(Object.entries(this.scholarSnapshotData.slice(-7)).reduce(function (total, pair) {
-                    const [, value] = pair;
+            return parseInt(weekData.reduce(function (total, value) {
                     let diff = 0
                     if (prev_bal != null){
                         diff = value.slp_bal - prev_bal
@@ -113,6 +113,23 @@ export default {
                     prev_bal = value.slp_bal
                     return total + diff;
                     }, 0))
+        },
+        getSevenValidDaysData(){
+            let returnData = []
+            console.log("WOO")
+            for (const[key, value] of Object.entries(this.scholarSnapshotData).reverse()) {
+                //may need to clean this up
+                if (value.slp_bal == 0){
+                    continue
+                }else{
+                    returnData.push(value)
+                    if (returnData.length > 6){
+                        break
+                    }
+                }
+            }
+            console.log(returnData)
+            return returnData
         },
         elo(){
             return this.scholarSnapshotData ? this.scholarSnapshotData[this.scholarSnapshotData.length-1].elo : 0
@@ -138,6 +155,9 @@ export default {
                 let diff = 0
                 const prevBal = this.scholarSnapshotData[i-1].slp_bal
                 const currBal = this.scholarSnapshotData[i].slp_bal
+                if (currBal == 0){
+                    continue
+                }
                 diff = currBal - prevBal
                 const date = Date.parse(this.scholarSnapshotData[i].created_at)
                 const diffAdd = tempData[date] ? tempData[date] + diff : diff
@@ -159,6 +179,9 @@ export default {
                 let diff = 0
                 const prevBal = this.scholarSnapshotData[i-1].slp_bal
                 const currBal = this.scholarSnapshotData[i].slp_bal
+                    if (currBal == 0){
+                        continue
+                    }
                 diff = currBal - prevBal
                 if (day < 6){
                     day++
