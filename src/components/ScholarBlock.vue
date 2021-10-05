@@ -85,17 +85,30 @@ export default {
     },
     data(){
         return{
-            copied: false
+            copied: false,
         }
     },
     computed:{
         ...mapGetters(['getCurrentUser']),
         dailySlp(){
-            if (!this.scholarSnapshotData) { return 0 }
-            const pastWeekData = this.scholarSnapshotData.slice(-7)
-            const denominator = pastWeekData.length 
+            if (!this.scholarSnapshotData) { 
+                return 0 
+            }
             //reduces the weekly snapshot into last 7 days and gets average of the slp gains between them
-            return parseInt(this.weeklySlp / denominator)
+            const weekData = this.getSevenValidDaysData
+            let prev_bal = null
+            const weeklyDenominator = parseInt(weekData.reduce(function (total, value) {
+                let diff = 0
+                if (prev_bal != null){
+                    diff = value.slp_bal - prev_bal
+                }
+                if (diff < 0){
+                    diff = 0
+                }
+                prev_bal = value.slp_bal
+                return total + (diff > 0 ? 1 : 0);
+            }, 0))
+            return parseInt(this.weeklySlp / weeklyDenominator)
         },
         showGraph(){
             return true
@@ -105,30 +118,35 @@ export default {
             const weekData = this.getSevenValidDaysData
             if (!this.scholarSnapshotData) { return 0 }
             let prev_bal = null
+            this.weeklyDenominator = 0
             return parseInt(weekData.reduce(function (total, value) {
-                    let diff = 0
-                    if (prev_bal != null){
-                        diff = value.slp_bal - prev_bal
-                    }
-                    prev_bal = value.slp_bal
-                    return total + diff;
-                    }, 0))
+                let diff = 0
+                if (prev_bal != null){
+                    diff = value.slp_bal - prev_bal
+                }
+                if (diff < 0){
+                    diff = 0
+                    console.log("pullout day")
+                }
+                prev_bal = value.slp_bal
+                return total + diff;
+                }, 0))
         },
         getSevenValidDaysData(){
             let returnData = []
-            console.log("WOO")
+            if (!this.scholarSnapshotData) { 
+                return returnData
+            }
             for (const[key, value] of Object.entries(this.scholarSnapshotData).reverse()) {
-                //may need to clean this up
-                if (value.slp_bal == 0){
-                    continue
-                }else{
-                    returnData.push(value)
+                const lookAhead = key > 0 ? this.scholarSnapshotData[key-1] : null
+                if (lookAhead){
+                    returnData.unshift(value)
                     if (returnData.length > 6){
+                        returnData
                         break
                     }
                 }
             }
-            console.log(returnData)
             return returnData
         },
         elo(){
@@ -179,9 +197,9 @@ export default {
                 let diff = 0
                 const prevBal = this.scholarSnapshotData[i-1].slp_bal
                 const currBal = this.scholarSnapshotData[i].slp_bal
-                    if (currBal == 0){
-                        continue
-                    }
+                if (currBal < prevBal){
+                    continue
+                }
                 diff = currBal - prevBal
                 if (day < 6){
                     day++

@@ -78,7 +78,7 @@ export default {
         recentIncreaseText(){
             if (this.showableGraph){
                 let returnString = this.getRecentIncrease + ' compared to yesterday'
-                return this.getRecentIncrease >= 0 ? '+' + returnString : returnString;
+                return this.getRecentIncrease >= 0 ? '+' + returnString : '' + returnString;
             }else{
                 return "Not enough data to compare to previous days"
             }

@@ -39,7 +39,7 @@ export default {
                     let diff = 0
                     const prevBal = scholar[i-1].slp_bal
                     const currBal = scholar[i].slp_bal
-                    if (currBal == 0){
+                    if (currBal < prevBal){
                         continue
                     }
                     diff = currBal - prevBal
@@ -81,7 +81,7 @@ export default {
             const graphData = this.getGraphData 
             if (graphData.length > 0) {
                 let returnString = graphData[graphData.length-1][1] 
-                return returnString >= 0 ? '+' + returnString : returnString;
+                return returnString >= 0 ? '+' + returnString : '' + returnString ;
             }
             return '0'
         },

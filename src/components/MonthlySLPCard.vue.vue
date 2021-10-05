@@ -88,7 +88,7 @@ export default {
         recentIncreaseText(){
             if (this.showableGraph){
                 let returnString = this.getRecentIncrease + ' compared to previous 30 days'
-                return this.getRecentIncrease >= 0 ? '+' + returnString : returnString;
+                return this.getRecentIncrease >= 0 ? '+' + returnString : '' + returnString;
             }else{
                 return "Not enough data to compare to previous months"
             }
